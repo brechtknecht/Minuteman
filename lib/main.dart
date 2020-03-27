@@ -1,7 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:minutemen/components/navigation.dart';
+
+import 'package:minutemen/views/mapView.dart';
+import 'package:minutemen/views/messageView.dart';
+import 'package:minutemen/views/profileView.dart';
 
 void main() => runApp(Minutemen());
 
@@ -10,52 +12,63 @@ class Minutemen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Google Maps Demo',
-      home: MapSample(),
+      home: DefaultView(),
+
+      initialRoute: '/',
+      // routes: {
+      //   // '/': (context) => MapView(),
+      //   '/messages': (context) => MessageView(),
+      //   '/profile': (context) => ProfileView()
+      // }
     );
   }
 }
 
-class MapSample extends StatefulWidget {
+class DefaultView extends StatefulWidget {
+  DefaultView({
+    Key key
+  }): super(key: key);
+
   @override
-  State<MapSample> createState() => MapSampleState();
+  _DefaultViewState createState() => _DefaultViewState();
 }
 
-class MapSampleState extends State<MapSample> {
-  Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+class _DefaultViewState extends State < DefaultView > {
+  int _selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        myLocationEnabled: true,
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('...!'),
-        icon: Icon(Icons.directions_boat),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
+    var tabs = [
+      MapView(),
+      MessageView(),
+      ProfileView()
+    ];
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    return Scaffold(
+      body: tabs.elementAt(_selectedTab),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedTab,
+        onTap: (int index) {
+          setState(() {
+            _selectedTab = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            title: Text("Karte"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mail),
+            title: Text("Nachrichten"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profil"),
+          ),
+        ],
+      ),
+    );
+
   }
 }
