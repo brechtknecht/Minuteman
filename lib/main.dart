@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:minutemen/components/navigation.dart';
 
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// All Views
 import 'package:minutemen/views/mapView.dart';
 import 'package:minutemen/views/messageView.dart';
 import 'package:minutemen/views/profileView.dart';
+
+// Data Models for Firestore
+import 'models/database.dart';
+import 'models/task.dart';
 
 void main() => runApp(Minutemen());
 
