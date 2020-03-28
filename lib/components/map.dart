@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -36,31 +37,41 @@ class MapSampleState extends State < MapSample > {
     // tilt: 59.440717697143555,
     zoom: 19.151926040649414);
 
+  final db = Firestore.instance;
+  
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: initialCameraPosition,
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: db.collection('tasks').document('MTs6WLGfd2WYjwDGuFWH').snapshots(),
+        builder: (context, snapshot) {
 
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-          controller.setMapStyle(_mapStyle);
-        },
+          Map data = snapshot.data.data;
 
-        myLocationEnabled: true,
+          return GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: initialCameraPosition,
 
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 150),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              controller.setMapStyle(_mapStyle);
+            },
 
-        markers: {
-          Marker(
-            markerId: MarkerId('test-1'),
-            position: LatLng(52.413955, 13.050977),
-            onTap: () => _goToFHP(),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueRed
-            )
-          )
+            myLocationEnabled: true,
+
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 150),
+
+            markers: {
+              Marker(
+                markerId: MarkerId('test-1'),
+                position: LatLng(data['LatLng'].latitude, data['LatLng'].longitude),
+                onTap: () => _goToFHP(),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed
+                )
+              )
+            }
+          );
         }
       )
     );

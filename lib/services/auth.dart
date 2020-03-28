@@ -5,30 +5,30 @@ import 'dart:async';
 
 class AuthService {
 
-  // Holt sich die Instanzen von FirebaseAuth und Firestore & Google Sign In 
-  // ...muss erweitert werden, je mehr Login-Funktionalitäten man implementiert
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final Firestore _db = Firestore.instance;
-  final GoogleSignIn _googleSignIn  = GoogleSignIn();
+    // Holt sich die Instanzen von FirebaseAuth und Firestore & Google Sign In 
+    // ...muss erweitert werden, je mehr Login-Funktionalitäten man implementiert
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _db = Firestore.instance;
 
-  // FETCHING VON NUTZERDATEN
+    // FETCHING VON NUTZERDATEN
 
-  // Gibt den Nutzer als Future Instanz zurück. Für Anfragen usw.
-  Future<FirebaseUser> get getUser => _auth.currentUser();
+    // Gibt den Nutzer als Future Instanz zurück. Für Anfragen usw.
+    Future<FirebaseUser> get getUser => _auth.currentUser();
 
-  // Gibt den Nutzer als konstanten Stream zurück, wenn sich der 
-  // des Users ändert
-  Stream<FirebaseUser> get user => _auth.onAuthStateChanged;
+    // Gibt den Nutzer als konstanten Stream zurück, wenn sich der 
+    // des Users ändert
+    Stream<FirebaseUser> get user => _auth.onAuthStateChanged;
 
-  // LOGIN METHODEN
-  // Wachsen an, je nachdem, welche Auth Möglichkeiten man noch mitliefert
+    // LOGIN METHODEN
+    // Wachsen an, je nachdem, welche Auth Möglichkeiten man noch mitliefert
 
-  // Anonymes Einloggen
-  Future<FirebaseUser> anonLogin() async {
-    FirebaseUser user = await _auth.signInAnonymously();
-    updateUserData(user);
-    return user;
-  }
+    // Anonymes Einloggen
+    Future<FirebaseUser> anonLogin() async {
+      final FirebaseUser user = (await _auth.signInAnonymously()).user;
+      updateUserData(user);
+      return user;
+    }
 
   // Einloggen mit Google Account
   Future<FirebaseUser> googleSignIn () async {
@@ -44,7 +44,7 @@ class AuthService {
       ); 
 
       // Ab hier wird die eingeloggte Instanz in einen Firebase User umgewandelt
-      FirebaseUser user = await _auth.signInWithCredential(credential);
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
       updateUserData(user);
 

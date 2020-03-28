@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minutemen/services/auth.dart';
 
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,7 +18,12 @@ void main() => runApp(Minutemen());
 class Minutemen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+      // Make user stream available
+      StreamProvider<FirebaseUser>.value(value: AuthService().user),
+    ],
+    child: MaterialApp(
       title: 'Flutter Google Maps Demo',
       home: DefaultView(),
 
@@ -27,7 +33,7 @@ class Minutemen extends StatelessWidget {
       //   '/messages': (context) => MessageView(),
       //   '/profile': (context) => ProfileView()
       // }
-    );
+    ));
   }
 }
 

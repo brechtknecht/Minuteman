@@ -26,9 +26,17 @@ dependencies:
   location: ^3.0.0
   provider: ^4.0.4
   google_maps_flutter: ^0.5.25
+
+  firebase_core: ^0.4.4+3
+  firebase_analytics: ^5.0.11
+
   firebase_auth: ^0.15.5+3
   google_sign_in: ^4.3.0
+
   cloud_firestore: ^0.13.4+2
+  
+  
+  
   grouped_buttons: ^1.0.4
 
 dev_dependencies:
